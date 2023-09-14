@@ -1,0 +1,23 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.notification {
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: 2px solid black;
+  border-radius: 4px;
+  color: black;
+  margin: 1rem 0;
+}
+
+.notification.success {
+  color: green;
+  border-color: green;
+}
+
+.notification.error {
+  color: red;
+  border-color: red;
+}
