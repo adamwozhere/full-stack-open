@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build:frontend": "rm -rf dist && cd ../../part2/phonebook && npm run build && cp -r dist build",
+    "build:frontend": "rm -rf dist && cd ../../part2/phonebook && npm run build && cp -r dist ../../part3/phonebook-backend",
     "deploy:full": "npm run build:frontend && git add . && git commit -m frontend-build && git push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
