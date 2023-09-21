@@ -31,3 +31,5 @@ Ensured everything works through the frontend also
 Added validation for name to be at least 3 characters, and display the error message on the frontend. Note: having a blank phone number does not trigger an error from the front end, as backend errors on name or number being undefined, whereas the frontend will submit an object `{ name: "Your Name", number: "" }`.
 
 Added custom validation for phone number: must be at least 8 characters (means I don't have to worry about passing `number: ""` anymore), and regex for 2 or 3 numbers, a dash, followed by numbers.
+
+Deployed to Render with environment variables and is working

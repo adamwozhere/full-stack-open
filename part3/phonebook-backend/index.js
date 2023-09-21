@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const Person = require('./models/person');
 
 // mongoose.set('strictQuery', false);
@@ -15,7 +14,7 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(cors());
 // app.use(requestLogger); ???
-morgan.token('body', (req, res) => JSON.stringify(req.body));
+morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
@@ -39,7 +38,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
@@ -135,7 +134,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-//approx 9hr
+//approx 10hr 30min
 
 // currently trying to implement: d Validation and ESLint
 // added { new: true, runValidators: true, context: 'query' } to get validation working on PUT as well as POST (check documentation for this)
