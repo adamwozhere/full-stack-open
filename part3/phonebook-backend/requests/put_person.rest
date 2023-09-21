@@ -1,0 +1,42 @@
+PUT http://localhost:3001/api/persons/650b19828f655e99c8d3f8f0 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "number": "23-10-664312"
+}
+
+###
+
+PUT http://localhost:3001/api/persons/6509d26e1f7845ae40bed54d HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Gary Mod",
+  "number": "23-10-664312"
+}
+
+###
+
+PUT http://localhost:3001/api/persons/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "This should not exist",
+  "number": "00-00-000000"
+}
+
+###
+
+PUT http://localhost:3001/api/persons/650b19828f655e99c8d3f8f0 HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:3001/api/persons/6509d26e1f7845ae40bed54d HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Al",
+  "number": "00-00-000000"
+}

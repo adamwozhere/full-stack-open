@@ -13,3 +13,21 @@ Build command `npm run deploy:full` is configured to build `part2/phonebook`, co
 
 Local dev for both the `part3/phonebook-backend` and `part2/phonebook` work together. It is no longer needed, but if trying to use the json-server in the frontend, it will not work unless you change the server proxy in vite connfig to `http://localhost:3001/api`
 
+## Exercise 3.12
+
+Setup mongo db on MongoAtlas, created node commandline app to create and list phonebook entries from MongoAtlas
+
+## Exercises 3.13 - 3.14
+
+Dev server for backend and frontend using MongoDB Atlas for fetching and posting persons
+
+## Exercises 3.15 - 3.18
+
+Moved error handling to it's own middleware, ensured deleting works, PUT works and the /info works
+Ensured everything works through the frontend also
+
+## Exercises 3.18 - 3.21
+
+Added validation for name to be at least 3 characters, and display the error message on the frontend. Note: having a blank phone number does not trigger an error from the front end, as backend errors on name or number being undefined, whereas the frontend will submit an object `{ name: "Your Name", number: "" }`.
+
+Added custom validation for phone number: must be at least 8 characters (means I don't have to worry about passing `number: ""` anymore), and regex for 2 or 3 numbers, a dash, followed by numbers.
