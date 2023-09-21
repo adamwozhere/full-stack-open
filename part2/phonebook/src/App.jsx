@@ -42,7 +42,15 @@ const App = () => {
                 person.id !== returnedPerson.id ? person : returnedPerson
               )
             )
-          );
+          )
+          .catch((error) => {
+            console.log('fail', error.response.data.error);
+            setNotificationMessage({
+              message: error.response.data.error,
+              type: 'error',
+            });
+            setTimeout(() => setNotificationMessage(null), 5000);
+          });
       }
     } else {
       const personObject = { name: newName, number: newNumber };
@@ -56,7 +64,14 @@ const App = () => {
           });
           setTimeout(() => setNotificationMessage(null), 5000);
         })
-        .catch((error) => console.log('fail', error));
+        .catch((error) => {
+          console.log('fail', error.response.data.error);
+          setNotificationMessage({
+            message: error.response.data.error,
+            type: 'error',
+          });
+          setTimeout(() => setNotificationMessage(null), 5000);
+        });
     }
 
     setNewName('');
