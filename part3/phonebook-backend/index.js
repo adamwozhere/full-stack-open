@@ -133,9 +133,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-//approx 10hr 30min
-
-// currently trying to implement: d Validation and ESLint
-// added { new: true, runValidators: true, context: 'query' } to get validation working on PUT as well as POST (check documentation for this)
-

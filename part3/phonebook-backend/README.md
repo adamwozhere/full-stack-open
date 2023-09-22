@@ -33,3 +33,8 @@ Added validation for name to be at least 3 characters, and display the error mes
 Added custom validation for phone number: must be at least 8 characters (means I don't have to worry about passing `number: ""` anymore), and regex for 2 or 3 numbers, a dash, followed by numbers.
 
 Deployed to Render with environment variables and is working
+
+## Exercise 3.22
+
+Added ESLint.
+
