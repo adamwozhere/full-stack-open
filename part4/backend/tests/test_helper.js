@@ -15,15 +15,23 @@ const initialBlogs = [
   },
 ];
 
-//non existing id
+//non existing id?
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
 };
 
+const User = require('../models/user');
+
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+};
+
 module.exports = {
   initialBlogs,
   blogsInDb,
+  usersInDb,
 };
 
