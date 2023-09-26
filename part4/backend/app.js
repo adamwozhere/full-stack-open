@@ -1,5 +1,6 @@
 const config = require('./utils/config');
 const express = require('express');
+require('express-async-errors');
 const app = express();
 const cors = require('cors');
 const blogsRouter = require('./controllers/blogs');
@@ -32,5 +33,5 @@ app.use('/api/blogs', blogsRouter);
 
 module.exports = app;
 
-// aprox 6hr
+// approx 9hr 45min (about to start section: Refactoring tests)
 
