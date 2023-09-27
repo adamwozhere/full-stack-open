@@ -4,10 +4,24 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
+
+let validWebToken = '';
+let validUserId = '';
+
+beforeAll(async () => {
+  await User.deleteMany({});
+  const passwordHash = await bcrypt.hash('password', 10);
+  const user = new User({ username: 'root', passwordHash });
+  await user.save();
+  validUserId = user.id;
+  validWebToken = await helper.getValidWebToken();
+  console.log('fetched webToken:', validWebToken);
+});
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-
   // ensure all are awaited in sequence by using for-of loop
   // (forEach with async .save() inside will not work as they are not actually a child of beforeEach)
   // (alternatively create an array of promises of blogObjects, then await Promise.all() but this will excecute in parallel)
@@ -50,11 +64,13 @@ describe('adding a new blog', () => {
       author: 'unknown',
       url: 'https://example.com',
       likes: 0,
+      userId: validUserId,
     };
 
     await api
       .post('/api/blogs')
       .send(blog)
+      .set('Authorization', `Bearer ${validWebToken}`)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -66,11 +82,15 @@ describe('adding a new blog', () => {
   });
 
   test('a blog with missing likes property will default to zero', async () => {
-    const response = await api.post('/api/blogs').send({
-      title: 'missing likes',
-      author: 'unknown',
-      url: 'https://example.com',
-    });
+    const response = await api
+      .post('/api/blogs')
+      .send({
+        title: 'missing likes',
+        author: 'unknown',
+        url: 'https://example.com',
+        userId: validUserId,
+      })
+      .set('Authorization', `Bearer ${validWebToken}`);
 
     expect(Number(response.body.likes)).toBe(0);
   });
@@ -81,14 +101,17 @@ describe('adding a new blog', () => {
       .send({
         author: 'unknown',
         url: 'https://example.com',
+        userId: validUserId,
       })
+      .set('Authorization', `Bearer ${validWebToken}`)
       .expect(400);
   });
 
   test('a blog with missing url returns response 400', async () => {
     await api
       .post('/api/blogs')
-      .send({ title: 'no title', author: 'unknown' })
+      .send({ title: 'no title', author: 'unknown', userId: validUserId })
+      .set('Authorization', `Bearer ${validWebToken}`)
       .expect(400);
   });
 });
