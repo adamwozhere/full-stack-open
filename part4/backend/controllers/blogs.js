@@ -3,14 +3,6 @@ const Blog = require('../models/blog.js');
 const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-};
-
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
   response.json(blogs);
@@ -18,8 +10,8 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body);
-  console.log('trying to post blog:', blog);
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  console.log('received token from request:', request.token);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'invalid token' });
   }
@@ -32,7 +24,7 @@ blogsRouter.post('/', async (request, response) => {
     blog.likes = 0;
   }
 
-  const user = await User.findById(request.body.userId);
+  const user = await User.findById(decodedToken.id);
   console.log('user from userID', user);
   blog.user = user.id;
 
@@ -44,8 +36,26 @@ blogsRouter.post('/', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id);
-  response.status(204).end();
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'invalid token' });
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+  const blog = await Blog.findById(request.params.id);
+
+  console.log('user', user);
+  console.log('blog', blog);
+
+  if (blog.user.toString() === user._id.toString()) {
+    await Blog.findOneAndRemove(blog);
+    return response.status(204).end();
+  }
+
+  response.status(401).json({ error: 'unauthorized user' });
+  // await Blog.findByIdAndRemove(request.params.id);
+  // response.status(204).end();
 });
 
 blogsRouter.put('/:id', async (request, response) => {

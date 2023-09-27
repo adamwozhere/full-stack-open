@@ -8,6 +8,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 let validWebToken = '';
+let unauthorizedUserWebToken = '';
 let validUserId = '';
 
 beforeAll(async () => {
@@ -17,6 +18,7 @@ beforeAll(async () => {
   await user.save();
   validUserId = user.id;
   validWebToken = await helper.getValidWebToken();
+  unauthorizedUserWebToken = await helper.getUnauthorizedUserWebToken();
   console.log('fetched webToken:', validWebToken);
 });
 
@@ -28,6 +30,7 @@ beforeEach(async () => {
   // (NOT: I don't think parallel or sequentially matters in this case)
   for (let blog of helper.initialBlogs) {
     let blogObject = new Blog(blog);
+    blogObject.user = validUserId;
     await blogObject.save();
   }
 });
@@ -58,6 +61,25 @@ describe('when there are some initial blogs', () => {
 });
 
 describe('adding a new blog', () => {
+  test('adding a blog with an invalid (malformed) webtoken fails with status 401', async () => {
+    const blog = {
+      title: 'invalid blog',
+      author: 'unknown',
+      url: 'https://example.com',
+      likes: 0,
+      userId: validUserId,
+    };
+
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+      .set('Authorization', 'Bearer invalidtoken')
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.error).toContain('jwt malformed');
+  });
+
   test('a valid blog can be added', async () => {
     const blog = {
       title: 'valid blog',
@@ -117,16 +139,49 @@ describe('adding a new blog', () => {
 });
 
 describe('deleting a blog', () => {
-  test('succeeds with status 204 if id is valid', async () => {
+  test('fails with status 401 if user is unauthorized', async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${unauthorizedUserWebToken}`)
+      .expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toEqual(blogsAtStart);
+
+    const titles = blogsAtEnd.map((r) => r.title);
+    expect(titles).toContain(blogToDelete.title);
+  });
+
+  test('with a valid user succeeds with status 204', async () => {
+    const blog = {
+      title: 'blog to be deleted',
+      author: 'unknown',
+      url: 'https://example.com',
+      likes: 0,
+      userId: validUserId,
+    };
+
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+      .set('Authorization', `Bearer ${validWebToken}`)
+      .expect(201);
+
+    console.log('response from posting blog to be deleted:', response.body);
+
+    const blogsAtStart = await helper.blogsInDb();
+    await api
+      .delete(`/api/blogs/${response.body.id}`)
+      .set('Authorization', `Bearer ${validWebToken}`)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
     const titles = blogsAtEnd.map((r) => r.title);
-    expect(titles).not.toContain(blogToDelete.title);
+    expect(titles).not.toContain(blog.title);
   });
 });
 

@@ -27,6 +27,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.tokenExtractor);
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
@@ -37,5 +38,5 @@ app.use(middleware.errorHandler);
 
 module.exports = app;
 
-// approx 11hr 30min (about to start 'Creating a new note')
+// approx 15hr 15min (doing 'tokenExtractor')
 

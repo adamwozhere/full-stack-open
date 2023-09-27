@@ -2,6 +2,7 @@ const Blog = require('../models/blog');
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
+const bcrypt = require('bcrypt');
 
 const initialBlogs = [
   {
@@ -40,10 +41,24 @@ const getValidWebToken = async () => {
   return response.body.token;
 };
 
+const getUnauthorizedUserWebToken = async () => {
+  const passwordHash = await bcrypt.hash('password', 10);
+  const user = new User({ username: 'unauthorizedUser', passwordHash });
+  await user.save();
+
+  const response = await api.post('/api/login').send({
+    username: 'unauthorizedUser',
+    password: 'password',
+  });
+
+  return response.body.token;
+};
+
 module.exports = {
   initialBlogs,
   blogsInDb,
   usersInDb,
   getValidWebToken,
+  getUnauthorizedUserWebToken,
 };
 

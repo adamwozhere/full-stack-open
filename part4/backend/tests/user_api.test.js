@@ -58,6 +58,46 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+
+  test('creation fails with status 400 when username is missing', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      name: 'John',
+      password: 'password123',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain('missing username and/or password');
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
+
+  test('creation fails with status 400 when passowrd is missing', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'Johnny5',
+      name: 'John',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain('missing username and/or password');
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
 });
 
 // clean up
