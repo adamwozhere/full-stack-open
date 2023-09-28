@@ -37,6 +37,3 @@ app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
 module.exports = app;
-
-// approx 15hr 15min (doing 'tokenExtractor')
-
