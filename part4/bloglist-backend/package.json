@@ -1,5 +1,5 @@
 {
-  "name": "blog-backend",
+  "name": "bloglist-backend",
   "version": "1.0.0",
   "description": "backend for full-stack-open 2023 part4",
   "main": "index.js",
@@ -32,3 +32,4 @@
     "testEnvironment": "node"
   }
 }
+
