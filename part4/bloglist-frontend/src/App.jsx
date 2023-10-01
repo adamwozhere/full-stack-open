@@ -6,10 +6,13 @@ import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -36,12 +39,10 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      setErrorMessage('Wrong credentials');
+      setNotificationMessage({ text: 'Wrong credentials', type: 'error' });
       // would it be better to reset the fields in error state also?
-      // setUsername('');
-      // setPassword('');
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotificationMessage(null);
       }, 5000);
     }
   };
@@ -49,6 +50,28 @@ const App = () => {
   const handleLogout = () => {
     setUser(null);
     window.localStorage.removeItem('loggedInBlogsAppUser');
+  };
+
+  const handleNewBlog = async (event) => {
+    event.preventDefault();
+    try {
+      await blogService.create({
+        title,
+        author,
+        url,
+      });
+      setBlogs((prev) => [...prev, { title, author, url }]);
+      setNotificationMessage({ text: `New blog: ${title} by ${author} added` });
+      setTimeout(() => setNotificationMessage(null), 5000);
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    } catch (exception) {
+      setNotificationMessage({ text: exception.message, type: 'error' });
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
+    }
   };
 
   const loginForm = () => (
@@ -80,23 +103,67 @@ const App = () => {
     </div>
   );
 
+  const newBlogForm = () => (
+    <div>
+      <form onSubmit={handleNewBlog}>
+        <h2>Create new</h2>
+        <div>
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="author">Author</label>
+          <input
+            type="text"
+            id="author"
+            name="author"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="url">URL</label>
+          <input
+            type="text"
+            id="url"
+            name="url"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </div>
+  );
+
   const blogsList = () => (
     <div>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <span>Logged in as {user.name}</span>{' '}
       <button type="button" onClick={handleLogout}>
         Log Out
       </button>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {newBlogForm()}
+      <br />
+      <div>
+        {blogs.map((blog) => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+      </div>
     </div>
   );
 
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification message={errorMessage} />
+
+      <Notification message={notificationMessage} />
 
       {user === null ? loginForm() : blogsList()}
     </div>
@@ -105,5 +172,5 @@ const App = () => {
 
 export default App;
 
-// approx 1hr - finished exerces 5.1
+// approx 2hr 45min - finished exercise 5.4
 
