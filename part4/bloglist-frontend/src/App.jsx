@@ -131,5 +131,7 @@ const App = () => {
 
 export default App;
 
-// approx 4hr 20min - finished exercise 5.6
+// approx 5hr - finished exercise 5.7
+// note: adding a new blog the next day when I didn't re-login failed, but worked after re-logging in:
+// is it to do with the token, is there expiry on this project?
 
