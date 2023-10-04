@@ -15,7 +15,9 @@ const App = () => {
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
   }, []);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
     try {
       const blog = await blogService.create(blogObject);
-      setBlogs((prev) => [...prev, blog]);
+      setBlogs((prev) => [...prev, blog].sort((a, b) => b.likes - a.likes));
       setNotificationMessage({
         text: `New blog: ${blog.title} by ${blog.author} added`,
       });
@@ -82,7 +84,9 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(likedBlog);
       setBlogs((prev) =>
-        prev.map((blog) => (blog === blogObject ? updatedBlog : blog))
+        prev
+          .map((blog) => (blog === blogObject ? updatedBlog : blog))
+          .sort((a, b) => b.likes - a.likes)
       );
     } catch (exception) {
       setNotificationMessage({ text: exception.message, type: 'error' });
