@@ -56,11 +56,11 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: body.likes,
   };
 
-  const result = await Blog.findByIdAndUpdate(request.params.id, blog, {
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true,
-  });
+  }).populate('user', { username: 1, name: 1 });
 
-  response.json(result);
+  response.json(updatedBlog);
 });
 
 module.exports = blogsRouter;

@@ -69,6 +69,26 @@ const App = () => {
     }
   };
 
+  const handleLike = async (blogObject) => {
+    const likedBlog = {
+      id: blogObject.id,
+      author: blogObject.author,
+      title: blogObject.title,
+      url: blogObject.url,
+      user: blogObject.user,
+      likes: Number(blogObject.likes) + 1,
+    };
+
+    try {
+      const updatedBlog = await blogService.update(likedBlog);
+      setBlogs((prev) =>
+        prev.map((blog) => (blog === blogObject ? updatedBlog : blog))
+      );
+    } catch (exception) {
+      setNotificationMessage({ text: exception.message, type: 'error' });
+    }
+  };
+
   const loginForm = () => (
     <div>
       <h2>Log in</h2>
@@ -111,8 +131,7 @@ const App = () => {
       <br />
       <div>
         {blogs.map((blog) => {
-          console.log(blog.id);
-          return <Blog key={blog.id} blog={blog} />;
+          return <Blog key={blog.id} blog={blog} likeBlog={handleLike} />;
         })}
       </div>
     </div>
@@ -131,7 +150,5 @@ const App = () => {
 
 export default App;
 
-// approx 5hr - finished exercise 5.7
-// note: adding a new blog the next day when I didn't re-login failed, but worked after re-logging in:
-// is it to do with the token, is there expiry on this project?
+// approx 5hr 30min - finished exercise 5.8
 
