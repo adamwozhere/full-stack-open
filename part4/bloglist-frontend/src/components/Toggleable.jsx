@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from 'react';
+import PropTypes from 'prop-types';
 
 const Toggleable = forwardRef((props, refs) => {
   const [visible, setVisible] = useState(false);
@@ -31,6 +32,10 @@ const Toggleable = forwardRef((props, refs) => {
 // add a displayname to the forwarded component to prevent lint error
 // see: https://stackoverflow.com/questions/67992894/component-definition-is-missing-display-name-for-forwardref
 Toggleable.displayName = 'Toggleable';
+
+Toggleable.propTypes = {
+  label: PropTypes.string.isRequired,
+};
 
 export default Toggleable;
 
