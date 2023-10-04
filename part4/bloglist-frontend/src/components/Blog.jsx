@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 
 const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
   const [expanded, setExpanded] = useState(false);
@@ -12,7 +13,7 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
 
   console.log('currentUser', currentUser, 'blogUser', blog.user);
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div>
         <span>
           {blog.title} {blog.author} &nbsp;
@@ -22,9 +23,9 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
         </button>
       </div>
       <div style={{ display: expanded ? '' : 'none' }}>
-        <div>{blog.url}</div>
-        <div>
-          likes {blog.likes}{' '}
+        <div className="url">{blog.url}</div>
+        <div className="likes">
+          likes {blog.likes} &nbsp;
           <button onClick={() => likeBlog(blog)}>like</button>
         </div>
         <div>{blog.user?.name}</div>
