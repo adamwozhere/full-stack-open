@@ -90,6 +90,23 @@ const App = () => {
       );
     } catch (exception) {
       setNotificationMessage({ text: exception.message, type: 'error' });
+      setTimeout(() => setNotificationMessage(null), 5000);
+    }
+  };
+
+  const handleRemove = async (blogObject) => {
+    try {
+      await blogService.remove(blogObject);
+      setBlogs((prev) =>
+        prev
+          .filter((blog) => blog.id !== blogObject.id)
+          .sort((a, b) => b.likes - a.likes)
+      );
+      setNotificationMessage({ text: `blog: ${blogObject.title} removed` });
+      setTimeout(() => setNotificationMessage(null), 5000);
+    } catch (exception) {
+      setNotificationMessage({ text: exception.message, type: 'error' });
+      setTimeout(() => setNotificationMessage(null), 5000);
     }
   };
 
@@ -135,7 +152,15 @@ const App = () => {
       <br />
       <div>
         {blogs.map((blog) => {
-          return <Blog key={blog.id} blog={blog} likeBlog={handleLike} />;
+          return (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              likeBlog={handleLike}
+              removeBlog={handleRemove}
+              currentUser={user}
+            />
+          );
         })}
       </div>
     </div>
