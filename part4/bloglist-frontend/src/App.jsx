@@ -134,7 +134,9 @@ const App = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button id="login-button" type="submit">
+          Login
+        </button>
       </form>
     </div>
   );
@@ -179,5 +181,5 @@ const App = () => {
 
 export default App;
 
-// approx 7hr 45min - finished exercise 5.16
+// approx 10hr 40min - finished exercise 5.17
 
