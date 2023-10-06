@@ -1,13 +1,13 @@
 describe('bloglist app', function () {
   beforeEach(function () {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset');
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`);
     const user = {
       name: 'Cypress User',
       username: 'Cypress',
       password: 'cypress-test',
     };
-    cy.request('POST', 'http://localhost:3003/api/users', user);
-    cy.visit('http://localhost:5173');
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user);
+    cy.visit('');
   });
 
   it('front page can be opened', function () {
@@ -41,7 +41,7 @@ describe('bloglist app', function () {
 
   describe('when logged in', function () {
     beforeEach(function () {
-      cy.request('POST', 'http://localhost:3003/api/login', {
+      cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
         username: 'Cypress',
         password: 'cypress-test',
       }).then((response) => {
@@ -49,7 +49,7 @@ describe('bloglist app', function () {
           'loggedInBlogsAppUser',
           JSON.stringify(response.body)
         );
-        cy.visit('http://localhost:5173');
+        cy.visit('');
       });
     });
 
@@ -67,7 +67,7 @@ describe('bloglist app', function () {
       beforeEach(function () {
         cy.request({
           method: 'POST',
-          url: 'http://localhost:3003/api/blogs',
+          url: `${Cypress.env('BACKEND')}/blogs`,
           body: {
             title: 'Test blog 1',
             author: 'Cypress',
@@ -79,6 +79,7 @@ describe('bloglist app', function () {
               .token,
           },
         });
+        cy.visit('');
       });
 
       it('a blog can be liked', function () {
@@ -102,8 +103,8 @@ describe('bloglist app', function () {
           username: 'newUser',
           password: 'cypress-test',
         };
-        cy.request('POST', 'http://localhost:3003/api/users', user);
-        cy.request('POST', 'http://localhost:3003/api/login', {
+        cy.request('POST', `${Cypress.env('BACKEND')}/users`, user);
+        cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
           username: 'newUser',
           password: 'cypress-test',
         }).then((response) => {
@@ -111,7 +112,7 @@ describe('bloglist app', function () {
             'loggedInBlogsAppUser',
             JSON.stringify(response.body)
           );
-          cy.visit('http://localhost:5173');
+          cy.visit('');
         });
         cy.contains('view').click();
         cy.contains('remove').should('not.exist');
@@ -142,7 +143,7 @@ describe('bloglist app', function () {
         for (let body of requests) {
           cy.request({
             method: 'POST',
-            url: 'http://localhost:3003/api/blogs',
+            url: `${Cypress.env('BACKEND')}/blogs`,
             body: body,
             auth: {
               bearer: JSON.parse(localStorage.getItem('loggedInBlogsAppUser'))
@@ -150,7 +151,7 @@ describe('bloglist app', function () {
             },
           });
         }
-        cy.visit('http://localhost:5173');
+        cy.visit('');
       });
 
       it('blogs are ordered by the most likes descending', function () {
