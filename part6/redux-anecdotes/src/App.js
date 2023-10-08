@@ -16,5 +16,6 @@ const App = () => {
 
 export default App;
 
-// approx 1hr 30min - finished exercise 6.3
+// approx 4hr 30min - finished exercise 6.10 nad 6.11 (they seem exactly the same tasks?)
+// installed redux chrome extension but not sure how to use it properly
 
