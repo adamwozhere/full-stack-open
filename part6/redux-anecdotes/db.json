@@ -31,9 +31,15 @@
       "votes": 0
     },
     {
+      "content": "Hello world!",
+      "id": "9336",
+      "votes": 10
+    },
+    {
       "content": "Full stack development is VERY hard",
-      "id": "22554",
-      "votes": 0
+      "id": "8080",
+      "votes": 9
     }
   ]
 }
+
