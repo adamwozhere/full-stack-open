@@ -18,28 +18,32 @@
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
       "id": "36975",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Premature optimization is the root of all evil.",
       "id": "25170",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
       "id": "98312",
-      "votes": 0
+      "votes": 2
     },
     {
       "content": "Hello world!",
       "id": "9336",
-      "votes": 10
+      "votes": 11
     },
     {
       "content": "Full stack development is VERY hard",
       "id": "8080",
       "votes": 9
+    },
+    {
+      "content": "Hello Redux!",
+      "id": "38287",
+      "votes": 4
     }
   ]
 }
-
