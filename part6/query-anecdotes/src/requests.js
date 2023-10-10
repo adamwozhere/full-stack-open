@@ -14,3 +14,8 @@ export const createAnecdote = (anecdote) => {
   return axios.post(baseUrl, newAnecdote).then((res) => res.data);
 };
 
+export const updateAnecdote = (anecdote) => {
+  const id = anecdote.id;
+  return axios.put(`${baseUrl}/${id}`, anecdote).then((res) => res.data);
+};
+
