@@ -2,8 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getAnecdotes, createAnecdote, updateAnecdote } from './requests';
 import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
+import { useNotificationDispatch } from './NotificationContext';
 
 const App = () => {
+  const dispatch = useNotificationDispatch();
+
   const queryClient = useQueryClient();
 
   const newAnecdoteMutation = useMutation({
@@ -32,6 +35,8 @@ const App = () => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = '';
     newAnecdoteMutation.mutate({ content });
+    dispatch({ type: 'SET', payload: `anecdote '${content}' created` });
+    setTimeout(() => dispatch({ type: 'RESET' }), 5000);
   };
 
   const result = useQuery({
@@ -55,6 +60,8 @@ const App = () => {
     console.log('vote');
     anecdote.votes += 1;
     updateAnecdoteMutation.mutate(anecdote);
+    dispatch({ type: 'SET', payload: `anecdote '${anecdote.content}' voted` });
+    setTimeout(() => dispatch({ type: 'RESET' }), 5000);
   };
 
   const anecdotes = result.data;
@@ -81,5 +88,5 @@ const App = () => {
 
 export default App;
 
-// approx. 1hr 30min - finished 6.21
+// approx. 3hr 30min - finished 6.23
 

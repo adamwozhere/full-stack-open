@@ -32,9 +32,13 @@
     },
     {
       "content": "Full stack development is VERY hard",
-      "votes": 0,
+      "votes": 5,
       "id": "t0uxHO9"
+    },
+    {
+      "content": "Hello Redux!",
+      "votes": 0,
+      "id": "lE-cSye"
     }
   ]
 }
-
