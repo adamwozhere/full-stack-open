@@ -15,6 +15,13 @@ const App = () => {
       const anecdotes = queryClient.getQueryData(['anecdotes']);
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote));
     },
+    onError: (error) => {
+      dispatch({
+        type: 'SET',
+        payload: 'Error: anecdote must be at least 5 characters long.',
+      });
+      setTimeout(() => dispatch({ type: 'RESET' }), 5000);
+    },
   });
 
   const updateAnecdoteMutation = useMutation({
@@ -87,6 +94,3 @@ const App = () => {
 };
 
 export default App;
-
-// approx. 3hr 30min - finished 6.23
-
