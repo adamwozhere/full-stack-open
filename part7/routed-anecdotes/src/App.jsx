@@ -97,6 +97,7 @@ const CreateNew = (props) => {
   const content = useField('text');
   const author = useField('text');
   const info = useField('text');
+  const reset = useField('reset');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -108,23 +109,30 @@ const CreateNew = (props) => {
     });
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    content.reset(), author.reset(), info.reset();
+  };
+
+  // this seems to work, setting reset prop explicitly although I don't know why, because reset isn't a valid prop
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
-          <input name="content" {...content} />
+          <input name="content" {...content} reset={reset} />
         </div>
         <div>
           author
-          <input name="author" {...author} />
+          <input name="author" {...author} reset={reset} />
         </div>
         <div>
           url for more info
-          <input name="info" {...info} />
+          <input name="info" {...info} reset={reset} />
         </div>
         <button>create</button>
+        <input type="reset" value="reset" />
       </form>
     </div>
   );
@@ -203,5 +211,5 @@ const App = () => {
 
 export default App;
 
-// approx 1hr 30min - finished exercise 7.3
+// approx 2hr 30min - finished exercise 7.5 and 7.6 but don't know if reset solution is correct
 
