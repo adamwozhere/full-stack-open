@@ -87,5 +87,3 @@ const App = () => {
 };
 
 export default App;
-
-// approx 3hr 30min - finished exercise 7.8
