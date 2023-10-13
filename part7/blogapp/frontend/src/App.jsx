@@ -5,14 +5,16 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import NewBlogForm from './components/NewBlogForm';
 import Toggleable from './components/Toggleable';
+import { useNotify } from './NotificationContext';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [notificationMessage, setNotificationMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const blogFormRef = useRef();
+
+  const notify = useNotify();
 
   useEffect(() => {
     blogService
@@ -41,11 +43,11 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      setNotificationMessage({ text: 'Wrong credentials', type: 'error' });
+      notify({
+        text: 'Wrong credentials',
+        type: 'error',
+      });
       // would it be better to reset the fields in error state also?
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
     }
   };
 
@@ -59,15 +61,16 @@ const App = () => {
     try {
       const blog = await blogService.create(blogObject);
       setBlogs((prev) => [...prev, blog].sort((a, b) => b.likes - a.likes));
-      setNotificationMessage({
+
+      notify({
         text: `New blog: ${blog.title} by ${blog.author} added`,
+        type: 'success',
       });
-      setTimeout(() => setNotificationMessage(null), 5000);
     } catch (exception) {
-      setNotificationMessage({ text: exception.message, type: 'error' });
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
+      notify({
+        text: exception.message,
+        type: 'error',
+      });
     }
   };
 
@@ -89,8 +92,10 @@ const App = () => {
           .sort((a, b) => b.likes - a.likes),
       );
     } catch (exception) {
-      setNotificationMessage({ text: exception.message, type: 'error' });
-      setTimeout(() => setNotificationMessage(null), 5000);
+      notify({
+        text: exception.message,
+        type: 'error',
+      });
     }
   };
 
@@ -102,11 +107,15 @@ const App = () => {
           .filter((blog) => blog.id !== blogObject.id)
           .sort((a, b) => b.likes - a.likes),
       );
-      setNotificationMessage({ text: `blog: ${blogObject.title} removed` });
-      setTimeout(() => setNotificationMessage(null), 5000);
+      notify({
+        text: `blog: ${blogObject.title} removed`,
+        type: 'success',
+      });
     } catch (exception) {
-      setNotificationMessage({ text: exception.message, type: 'error' });
-      setTimeout(() => setNotificationMessage(null), 5000);
+      notify({
+        text: exception.message,
+        type: 'error',
+      });
     }
   };
 
@@ -172,7 +181,7 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
 
-      <Notification message={notificationMessage} />
+      <Notification />
 
       {user === null ? loginForm() : blogsList()}
     </div>
