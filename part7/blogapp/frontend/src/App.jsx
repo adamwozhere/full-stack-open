@@ -190,7 +190,7 @@ const App = () => {
 
 export default App;
 
-// approx 11hr - exercise 7.13 - user with useReducer
+// approx 11hr - exercise 7.13 - user with useReducer - have not implemented sorting
 // note: onSuccess useMutation doesn't work for the deleting a record,
 // as the axios request doesn't return the deleted object,
 // I've used a useMutationAsync and moved the setting state logic to the handler instead with await
