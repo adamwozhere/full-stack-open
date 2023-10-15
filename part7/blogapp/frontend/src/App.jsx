@@ -8,25 +8,17 @@ import Toggleable from './components/Toggleable';
 import { useNotify } from './NotificationContext';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createBlog, getBlogs } from './requests';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
   const notify = useNotify();
-
-  // useEffect(() => {
-  //   blogService
-  //     .getAll()
-  //     .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInBlogsAppUser');
@@ -63,8 +55,8 @@ const App = () => {
   };
 
   const queryClient = useQueryClient();
+
   const blogMutation = useMutation({
-    // mutationFn: createBlog,
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
       const blogs = queryClient.getQueryData(['blogs']);
@@ -94,7 +86,20 @@ const App = () => {
     }
   };
 
+  const likeMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: (updatedBlog) => {
+      console.log('liked blog:', updatedBlog);
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog)),
+      );
+    },
+  });
+
   const handleLike = async (blogObject) => {
+    console.log('handleLike');
     const likedBlog = {
       id: blogObject.id,
       author: blogObject.author,
@@ -105,12 +110,13 @@ const App = () => {
     };
 
     try {
-      const updatedBlog = await blogService.update(likedBlog);
-      setBlogs((prev) =>
-        prev
-          .map((blog) => (blog === blogObject ? updatedBlog : blog))
-          .sort((a, b) => b.likes - a.likes),
-      );
+      console.log('liking blog');
+      const updatedBlog = await likeMutation.mutateAsync(likedBlog);
+      // setBlogs((prev) =>
+      //   prev
+      //     .map((blog) => (blog === blogObject ? updatedBlog : blog))
+      //     .sort((a, b) => b.likes - a.likes),
+      // );
     } catch (exception) {
       notify({
         text: exception.message,
@@ -119,14 +125,19 @@ const App = () => {
     }
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: blogService.remove,
+  });
+
   const handleRemove = async (blogObject) => {
     try {
-      await blogService.remove(blogObject);
-      setBlogs((prev) =>
-        prev
-          .filter((blog) => blog.id !== blogObject.id)
-          .sort((a, b) => b.likes - a.likes),
+      await deleteMutation.mutateAsync(blogObject);
+
+      // cant put this in onSuccess in deleteMutation as axios DELETE does not return the object
+      queryClient.setQueryData(['blogs'], (blogs) =>
+        blogs.filter((blog) => blog.id !== blogObject.id),
       );
+
       notify({
         text: `blog: ${blogObject.title} removed`,
         type: 'success',
@@ -169,4 +180,9 @@ const App = () => {
 
 export default App;
 
-// approx 8hr 30min - exercise 7.11 working but needs refactoring and tidying up
+// approx 10hr - exercise 7.12 working but needs refactoring and tidying up
+// note: onSuccess useMutation doesn't work for the deleting a record,
+// as the axios request doesn't return the deleted object,
+// I've used a useMutationAsync and moved the setting state logic to the handler instead with await
+// (which is different from the 'like' mutation -- check with the solution after submitting to see if there is a better way,
+// perhaps all the useQuery mutations etc should be all put in the services file, and just the axios requests in requests file?)

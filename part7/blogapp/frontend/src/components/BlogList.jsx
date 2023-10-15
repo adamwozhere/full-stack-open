@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getBlogs } from '../requests';
+import blogService from '../services/blogs';
 import Toggleable from './Toggleable';
 import NewBlogForm from './NewBlogForm';
 import Blog from './Blog';
@@ -14,7 +14,7 @@ const BlogList = ({
 }) => {
   const response = useQuery({
     queryKey: ['blogs'],
-    queryFn: getBlogs,
+    queryFn: blogService.getAll,
   });
 
   if (response.isLoading) {

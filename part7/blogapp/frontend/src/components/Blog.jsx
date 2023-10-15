@@ -11,7 +11,7 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
     marginTop: '0.5em',
   };
 
-  console.log('currentUser', currentUser, 'blogUser', blog.user);
+  // console.log('currentUser', currentUser, 'blogUser', blog.user);
   return (
     <div className="blog" style={blogStyle}>
       <div>
