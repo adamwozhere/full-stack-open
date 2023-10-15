@@ -10,6 +10,9 @@ import { useUser } from './UserContext';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { Routes, Route, Link } from 'react-router-dom';
+import UsersList from './components/UsersList';
+
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 
@@ -165,6 +168,9 @@ const App = () => {
       <h1>Blogs</h1>
 
       <Notification />
+      <Routes>
+        <Route path="/users" element={<UsersList />} />
+      </Routes>
 
       {user === null ? (
         <LoginForm
@@ -190,7 +196,8 @@ const App = () => {
 
 export default App;
 
-// approx 11hr - exercise 7.13 - user with useReducer - have not implemented sorting
+// approx 11hr 30min - exercise 7.15 - completed simple users view
+// NOTE: have not implemented blog sorting by likes yet
 // note: onSuccess useMutation doesn't work for the deleting a record,
 // as the axios request doesn't return the deleted object,
 // I've used a useMutationAsync and moved the setting state logic to the handler instead with await
