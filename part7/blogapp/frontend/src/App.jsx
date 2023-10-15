@@ -7,6 +7,12 @@ import NewBlogForm from './components/NewBlogForm';
 import Toggleable from './components/Toggleable';
 import { useNotify } from './NotificationContext';
 
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { createBlog, getBlogs } from './requests';
+
+import BlogList from './components/BlogList';
+import LoginForm from './components/LoginForm';
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
@@ -16,11 +22,11 @@ const App = () => {
 
   const notify = useNotify();
 
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  }, []);
+  // useEffect(() => {
+  //   blogService
+  //     .getAll()
+  //     .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInBlogsAppUser');
@@ -56,11 +62,25 @@ const App = () => {
     window.localStorage.removeItem('loggedInBlogsAppUser');
   };
 
+  const queryClient = useQueryClient();
+  const blogMutation = useMutation({
+    // mutationFn: createBlog,
+    mutationFn: blogService.create,
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueryData(['blogs'], blogs.concat(newBlog));
+    },
+  });
+
   const handleNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
     try {
-      const blog = await blogService.create(blogObject);
-      setBlogs((prev) => [...prev, blog].sort((a, b) => b.likes - a.likes));
+      const blog = await blogMutation.mutateAsync(blogObject);
+
+      console.log('mutation response:', blog);
+
+      // const blog = await blogService.create(blogObject);
+      // setBlogs((prev) => [...prev, blog].sort((a, b) => b.likes - a.likes));
 
       notify({
         text: `New blog: ${blog.title} by ${blog.author} added`,
@@ -119,75 +139,34 @@ const App = () => {
     }
   };
 
-  const loginForm = () => (
-    <div>
-      <h2>Log in</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button id="login-button" type="submit">
-          Login
-        </button>
-      </form>
-    </div>
-  );
-
-  const blogsList = () => (
-    <div>
-      <h2>blogs</h2>
-      <span>Logged in as {user.name}</span>{' '}
-      <button type="button" onClick={handleLogout}>
-        Log Out
-      </button>
-      <Toggleable label="new blog" ref={blogFormRef}>
-        <NewBlogForm createBlog={handleNewBlog} />
-      </Toggleable>
-      <br />
-      <div>
-        {blogs.map((blog) => {
-          return (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              likeBlog={handleLike}
-              removeBlog={handleRemove}
-              currentUser={user}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-
   return (
     <div>
       <h1>Blogs</h1>
 
       <Notification />
 
-      {user === null ? loginForm() : blogsList()}
+      {user === null ? (
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
+      ) : (
+        <BlogList
+          user={user}
+          handleLogout={handleLogout}
+          handleNewBlog={handleNewBlog}
+          handleLike={handleLike}
+          handleRemove={handleRemove}
+          blogFormRef={blogFormRef}
+        />
+      )}
     </div>
   );
 };
 
 export default App;
 
-// approx 12hr
+// approx 8hr 30min - exercise 7.11 working but needs refactoring and tidying up
