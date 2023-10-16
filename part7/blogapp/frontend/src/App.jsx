@@ -216,7 +216,7 @@ const App = () => {
 
 export default App;
 
-// approx 13 hr 30 min - exercise 7.17 - added navbar
+// approx 14 hr - exercise 7.18 - added comments route and displays them in single Blog page
 
 // NOTE: have not implemented blog sorting by likes yet
 

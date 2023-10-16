@@ -28,6 +28,13 @@ const Blog = ({ likeBlog, user, removeBlog }) => {
       {user.username === blog.user.username ? (
         <button onClick={() => removeBlog(blog)}>remove</button>
       ) : null}
+      <h2>Comments</h2>
+      {blog.comments.length === 0 ? <p>No comments yet</p> : null}
+      <ul>
+        {blog.comments.map((comment, index) => (
+          <li key={index + comment.slice(-1)}>{comment}</li>
+        ))}
+      </ul>
     </div>
   );
 };
