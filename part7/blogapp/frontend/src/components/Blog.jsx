@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import blogService from '../services/blogs';
 import { useParams } from 'react-router-dom';
 
-const Blog = ({ likeBlog, user, removeBlog }) => {
+const Blog = ({ likeBlog, user, removeBlog, createComment }) => {
+  const [comment, setComment] = useState('');
   const id = useParams().id;
   const response = useQuery({
     queryKey: ['blogs'],
@@ -14,6 +16,13 @@ const Blog = ({ likeBlog, user, removeBlog }) => {
   }
 
   const blog = response.data.find((blog) => blog.id === id);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('submit comment');
+
+    createComment(blog, comment);
+  };
 
   return (
     <div>
@@ -29,10 +38,21 @@ const Blog = ({ likeBlog, user, removeBlog }) => {
         <button onClick={() => removeBlog(blog)}>remove</button>
       ) : null}
       <h2>Comments</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          id="comment"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+        />
+        <button type="submit">add comment</button>
+      </form>
+
       {blog.comments.length === 0 ? <p>No comments yet</p> : null}
       <ul>
         {blog.comments.map((comment, index) => (
-          <li key={index + comment.slice(-1)}>{comment}</li>
+          <li key={index + comment.slice(-5)}>{comment}</li>
         ))}
       </ul>
     </div>

@@ -172,6 +172,33 @@ const App = () => {
     }
   };
 
+  const commentMutation = useMutation({
+    mutationFn: blogService.comment,
+    onSuccess: (commentedBlog) => {
+      console.log('commented blog:', commentedBlog);
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((blog) =>
+          blog.id === commentedBlog.id ? commentedBlog : blog,
+        ),
+      );
+    },
+  });
+
+  const handleComment = async (blogObject, comment) => {
+    try {
+      const commentObject = {
+        id: blogObject.id,
+        comment: comment,
+      };
+
+      const response = await commentMutation.mutateAsync(commentObject);
+    } catch (error) {
+      console.log(`Error:`, error.message);
+    }
+  };
+
   return (
     <div>
       <NavMenu user={user} logout={handleLogout} />
@@ -206,7 +233,12 @@ const App = () => {
         <Route
           path="/blogs/:id"
           element={
-            <Blog likeBlog={handleLike} user={user} removeBlog={handleRemove} />
+            <Blog
+              likeBlog={handleLike}
+              user={user}
+              removeBlog={handleRemove}
+              createComment={handleComment}
+            />
           }
         />
       </Routes>
@@ -216,7 +248,7 @@ const App = () => {
 
 export default App;
 
-// approx 14 hr - exercise 7.18 - added comments route and displays them in single Blog page
+// approx 14 hr 40 min - exercise 7.19 - comments an be added from front end!
 
 // NOTE: have not implemented blog sorting by likes yet
 
