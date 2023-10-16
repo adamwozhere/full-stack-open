@@ -4,6 +4,7 @@ import Toggleable from './Toggleable';
 import NewBlogForm from './NewBlogForm';
 import Blog from './Blog';
 import { Link } from 'react-router-dom';
+import LoginForm from './LoginForm';
 
 const BlogList = ({
   user,
@@ -18,6 +19,9 @@ const BlogList = ({
     queryFn: blogService.getAll,
   });
 
+  if (!user) {
+    return <LoginForm />;
+  }
   if (response.isLoading) {
     return <div>Loading blogs...</div>;
   }
@@ -30,11 +34,7 @@ const BlogList = ({
 
   return (
     <div>
-      <h2>blogs</h2>
-      <span>Logged in as {user.name}</span>{' '}
-      <button type="button" onClick={handleLogout}>
-        Log Out
-      </button>
+      <h2>Blog App</h2>
       <Toggleable label="new blog" ref={blogFormRef}>
         <NewBlogForm createBlog={handleNewBlog} />
       </Toggleable>

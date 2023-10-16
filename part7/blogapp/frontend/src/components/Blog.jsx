@@ -17,6 +17,7 @@ const Blog = ({ likeBlog, user, removeBlog }) => {
 
   return (
     <div>
+      <h1>Blog App</h1>
       <h2>{blog.title}</h2>
       <a href={blog.url}>{blog.url}</a>
       <div>

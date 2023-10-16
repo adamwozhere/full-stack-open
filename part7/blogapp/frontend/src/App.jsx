@@ -15,6 +15,7 @@ import UsersList from './components/UsersList';
 import User from './components/User';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
+import NavMenu from './components/NavMenu';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -147,9 +148,12 @@ const App = () => {
 
   const handleRemove = async (blogObject) => {
     try {
-      await deleteMutation.mutateAsync(blogObject);
+      // perhaps navigate should not happen until awaiting deleteMutation,
+      // but then there is an error in console as the Blog is momentarily trying to render missing data
 
       navigate('/');
+
+      await deleteMutation.mutateAsync(blogObject);
 
       // cant put this in onSuccess in deleteMutation as axios DELETE does not return the object
       queryClient.setQueryData(['blogs'], (blogs) =>
@@ -170,10 +174,33 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
+      <NavMenu user={user} logout={handleLogout} />
 
       <Notification />
       <Routes>
+        <Route
+          path="/"
+          element={
+            user === null ? (
+              <LoginForm
+                handleLogin={handleLogin}
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+              />
+            ) : (
+              <BlogList
+                user={user}
+                handleLogout={handleLogout}
+                handleNewBlog={handleNewBlog}
+                handleLike={handleLike}
+                handleRemove={handleRemove}
+                blogFormRef={blogFormRef}
+              />
+            )
+          }
+        />
         <Route path="/users" element={<UsersList />} />
         <Route path="/users/:id" element={<User />} />
         <Route
@@ -183,34 +210,17 @@ const App = () => {
           }
         />
       </Routes>
-
-      {user === null ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
-      ) : (
-        <BlogList
-          user={user}
-          handleLogout={handleLogout}
-          handleNewBlog={handleNewBlog}
-          handleLike={handleLike}
-          handleRemove={handleRemove}
-          blogFormRef={blogFormRef}
-        />
-      )}
     </div>
   );
 };
 
 export default App;
 
-// approx 13 hr - exercise 7.16 - works except navigation after removing a blog from the blog page shows errors in console (check order or actions for navigate('/') and says no '/blogs' route - this may be fixed in adding navigation bar / routes in next exercise)
+// approx 13 hr 30 min - exercise 7.17 - added navbar
+
 // NOTE: have not implemented blog sorting by likes yet
-// note: onSuccess useMutation doesn't work for the deleting a record,
+
+// Note: onSuccess useMutation doesn't work for the deleting a record,
 // as the axios request doesn't return the deleted object,
 // I've used a useMutationAsync and moved the setting state logic to the handler instead with await
 // (which is different from the 'like' mutation -- check with the solution after submitting to see if there is a better way,
