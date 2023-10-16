@@ -10,7 +10,7 @@ import { useUser } from './UserContext';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import UsersList from './components/UsersList';
 import User from './components/User';
 import BlogList from './components/BlogList';
@@ -22,6 +22,8 @@ const App = () => {
   // const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
+  const navigate = useNavigate();
+
   const notify = useNotify();
 
   const [user, userDispatch] = useUser();
@@ -31,6 +33,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       // should this code be handled with another function?
+      console.log('user is', user);
       userDispatch({ type: 'SET_USER', payload: user });
       userDispatch({ type: 'SET_TOKEN', payload: user.token });
       blogService.setToken(user.token);
@@ -146,6 +149,8 @@ const App = () => {
     try {
       await deleteMutation.mutateAsync(blogObject);
 
+      navigate('/');
+
       // cant put this in onSuccess in deleteMutation as axios DELETE does not return the object
       queryClient.setQueryData(['blogs'], (blogs) =>
         blogs.filter((blog) => blog.id !== blogObject.id),
@@ -171,6 +176,12 @@ const App = () => {
       <Routes>
         <Route path="/users" element={<UsersList />} />
         <Route path="/users/:id" element={<User />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <Blog likeBlog={handleLike} user={user} removeBlog={handleRemove} />
+          }
+        />
       </Routes>
 
       {user === null ? (
@@ -197,7 +208,7 @@ const App = () => {
 
 export default App;
 
-// approx 11hr 30min - exercise 7.15 - completed simple users view
+// approx 13 hr - exercise 7.16 - works except navigation after removing a blog from the blog page shows errors in console (check order or actions for navigate('/') and says no '/blogs' route - this may be fixed in adding navigation bar / routes in next exercise)
 // NOTE: have not implemented blog sorting by likes yet
 // note: onSuccess useMutation doesn't work for the deleting a record,
 // as the axios request doesn't return the deleted object,

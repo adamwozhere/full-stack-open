@@ -3,6 +3,7 @@ import blogService from '../services/blogs';
 import Toggleable from './Toggleable';
 import NewBlogForm from './NewBlogForm';
 import Blog from './Blog';
+import { Link } from 'react-router-dom';
 
 const BlogList = ({
   user,
@@ -39,17 +40,17 @@ const BlogList = ({
       </Toggleable>
       <br />
       <div>
-        {blogs.map((blog) => {
-          return (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              likeBlog={handleLike}
-              removeBlog={handleRemove}
-              currentUser={user}
-            />
-          );
-        })}
+        <ul>
+          {blogs.map((blog) => {
+            return (
+              <li key={blog.id}>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} - {blog.author}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

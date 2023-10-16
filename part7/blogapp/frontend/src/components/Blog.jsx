@@ -1,42 +1,34 @@
-import { useState } from 'react';
-import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import blogService from '../services/blogs';
+import { useParams } from 'react-router-dom';
 
-const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
-  const [expanded, setExpanded] = useState(false);
+const Blog = ({ likeBlog, user, removeBlog }) => {
+  const id = useParams().id;
+  const response = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  });
 
-  const blogStyle = {
-    border: '1px solid black',
-    borderRadius: '4px',
-    padding: '0.5em 1em',
-    marginTop: '0.5em',
-  };
+  if (response.isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  // console.log('currentUser', currentUser, 'blogUser', blog.user);
+  const blog = response.data.find((blog) => blog.id === id);
+
   return (
-    <div className="blog" style={blogStyle}>
+    <div>
+      <h2>{blog.title}</h2>
+      <a href={blog.url}>{blog.url}</a>
       <div>
-        <span>
-          {blog.title} {blog.author} &nbsp;
-        </span>
-        <button onClick={() => setExpanded(!expanded)}>
-          {expanded ? 'hide' : 'view'}
-        </button>
+        <span>{blog.likes} likes </span>
+        <button onClick={() => likeBlog(blog)}>like</button>
       </div>
-      <div style={{ display: expanded ? '' : 'none' }}>
-        <div className="url">{blog.url}</div>
-        <div className="likes">
-          likes {blog.likes} &nbsp;
-          <button onClick={() => likeBlog(blog)}>like</button>
-        </div>
-        <div>{blog.user?.name}</div>
-        {currentUser.username === blog.user?.username ? (
-          <button onClick={() => removeBlog(blog)}>remove</button>
-        ) : null}
-      </div>
+      <p>added by {blog.user.name}</p>
+      {user.username === blog.user.username ? (
+        <button onClick={() => removeBlog(blog)}>remove</button>
+      ) : null}
     </div>
   );
 };
 
 export default Blog;
-
-// note: user is displayed by using user? as earlier default posts have no assigned user
