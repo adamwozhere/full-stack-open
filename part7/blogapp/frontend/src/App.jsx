@@ -12,7 +12,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Routes, Route, Link } from 'react-router-dom';
 import UsersList from './components/UsersList';
-
+import User from './components/User';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 
@@ -170,6 +170,7 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path="/users" element={<UsersList />} />
+        <Route path="/users/:id" element={<User />} />
       </Routes>
 
       {user === null ? (
