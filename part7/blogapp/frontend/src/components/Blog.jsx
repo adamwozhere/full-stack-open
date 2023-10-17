@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import blogService from '../services/blogs';
 import { useParams } from 'react-router-dom';
 
+import { Title } from './Title';
+
 const Blog = ({ likeBlog, user, removeBlog, createComment }) => {
   const [comment, setComment] = useState('');
   const id = useParams().id;
@@ -26,7 +28,7 @@ const Blog = ({ likeBlog, user, removeBlog, createComment }) => {
 
   return (
     <div>
-      <h1>Blog App</h1>
+      <Title>Blog App</Title>
       <h2>{blog.title}</h2>
       <a href={blog.url}>{blog.url}</a>
       <div>

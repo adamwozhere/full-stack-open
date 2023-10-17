@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 
+import Button from './Button';
+
 const NewBlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -48,7 +50,7 @@ const NewBlogForm = ({ createBlog }) => {
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button type="submit">Create</button>
+      <Button type="submit">Create</Button>
     </form>
   );
 };

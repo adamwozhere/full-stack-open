@@ -3,12 +3,10 @@ import Blog from './components/Blog';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
-import NewBlogForm from './components/NewBlogForm';
-import Toggleable from './components/Toggleable';
 import { useNotify } from './NotificationContext';
 import { useUser } from './UserContext';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import UsersList from './components/UsersList';
@@ -17,10 +15,21 @@ import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import NavMenu from './components/NavMenu';
 
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Arial', sans-serif;
+`;
+
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const [user, setUser] = useState(null);
+
   const blogFormRef = useRef();
 
   const navigate = useNavigate();
@@ -88,9 +97,6 @@ const App = () => {
 
       console.log('mutation response:', blog);
 
-      // const blog = await blogService.create(blogObject);
-      // setBlogs((prev) => [...prev, blog].sort((a, b) => b.likes - a.likes));
-
       notify({
         text: `New blog: ${blog.title} by ${blog.author} added`,
         type: 'success',
@@ -129,11 +135,6 @@ const App = () => {
     try {
       console.log('liking blog');
       const updatedBlog = await likeMutation.mutateAsync(likedBlog);
-      // setBlogs((prev) =>
-      //   prev
-      //     .map((blog) => (blog === blogObject ? updatedBlog : blog))
-      //     .sort((a, b) => b.likes - a.likes),
-      // );
     } catch (exception) {
       notify({
         text: exception.message,
@@ -200,7 +201,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <Wrapper>
       <NavMenu user={user} logout={handleLogout} />
 
       <Notification />
@@ -242,15 +243,17 @@ const App = () => {
           }
         />
       </Routes>
-    </div>
+    </Wrapper>
   );
 };
 
 export default App;
 
-// approx 14 hr 40 min - exercise 7.19 - comments an be added from front end!
+// approx 15 hr 30 min - exercise 7.20, 7.21 - added some styling with StyledComponents
 
-// NOTE: have not implemented blog sorting by likes yet
+// NOTE: there is no error checking for the reqests for comments - because I have not set this up properly?
+// perhaps a Comments model is needed in Mongoose, or some error checking in the route handler?
+// e.g. it does not error if you send a request body that doesn't have / is different to 'comment' key
 
 // Note: onSuccess useMutation doesn't work for the deleting a record,
 // as the axios request doesn't return the deleted object,
@@ -258,4 +261,4 @@ export default App;
 // (which is different from the 'like' mutation -- check with the solution after submitting to see if there is a better way,
 // perhaps all the useQuery mutations etc should be all put in the services file, and just the axios requests in requests file?)
 // also not sure how the reducer should be handled for the User - should there be separate helper functions for logging in / out
-// and should the token be stored just in the user reducer state and not browser storage. Do I still need useEffect to detect the user at the start?
+// Do I still need useEffect to detect the user at the start? Should it test the token to see if it's timed out on loading?

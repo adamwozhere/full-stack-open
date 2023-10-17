@@ -2,18 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import blogService from '../services/blogs';
 import Toggleable from './Toggleable';
 import NewBlogForm from './NewBlogForm';
-import Blog from './Blog';
 import { Link } from 'react-router-dom';
 import LoginForm from './LoginForm';
 
-const BlogList = ({
-  user,
-  handleLogout,
-  handleNewBlog,
-  handleLike,
-  handleRemove,
-  blogFormRef,
-}) => {
+import { Title } from './Title';
+
+const BlogList = ({ user, handleNewBlog, blogFormRef }) => {
   const response = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
@@ -30,11 +24,11 @@ const BlogList = ({
     return <div>Error: {response.error.message}</div>;
   }
 
-  const blogs = response.data;
+  const blogs = response.data.sort((a, b) => b.likes - a.likes);
 
   return (
     <div>
-      <h2>Blog App</h2>
+      <Title>Blog App</Title>
       <Toggleable label="new blog" ref={blogFormRef}>
         <NewBlogForm createBlog={handleNewBlog} />
       </Toggleable>

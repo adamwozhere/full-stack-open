@@ -1,3 +1,6 @@
+import Button from './Button';
+import { Title } from './Title';
+
 const LoginForm = ({
   handleLogin,
   username,
@@ -7,7 +10,7 @@ const LoginForm = ({
 }) => {
   return (
     <div>
-      <h2>Log in</h2>
+      <Title>Log in</Title>
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="username">Username</label>
@@ -29,9 +32,9 @@ const LoginForm = ({
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button id="login-button" type="submit">
+        <Button id="login-button" type="submit">
           Login
-        </button>
+        </Button>
       </form>
     </div>
   );

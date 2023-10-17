@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import usersService from '../services/users';
 
+import { Title } from './Title';
+
 const User = () => {
   const id = useParams().id;
   const response = useQuery({
@@ -17,8 +19,8 @@ const User = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>Added blogs</h3>
+      <Title>{user.name}</Title>
+      <h2>Added blogs</h2>
       <ul>
         {user.blogs.map((blog) => (
           <li key={blog.id}>{blog.title}</li>
