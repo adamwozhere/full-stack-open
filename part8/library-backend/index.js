@@ -177,8 +177,16 @@ const resolvers = {
     },
     editAuthor: (root, args) => {
       const author = authors.find((a) => a.name === args.name);
+      if (!author) {
+        throw new GraphQLError('Author must exist', {
+          extentions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+          },
+        });
+      }
       author.born = args.setBornTo;
-      authors = authors.concat(author);
+      authors = authors.map((a) => (a.name === author.name ? author : a));
       return author;
     },
   },
