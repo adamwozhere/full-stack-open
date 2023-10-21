@@ -3,6 +3,23 @@ const { startStandaloneServer } = require('@apollo/server/standalone');
 const { GraphQLError } = require('graphql');
 const { v4: uuid } = require('uuid');
 
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
+
+const Author = require('./models/author.model');
+const Book = require('./models/book.model');
+
+require('dotenv').config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+console.log('conneting to', MONGODB_URI);
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => console.log('connected to MongoDB'))
+  .catch((error) => console.log('error connecting to MongoDB:', error.message));
+
 let authors = [
   {
     name: 'Robert Martin',
@@ -108,7 +125,7 @@ const typeDefs = `
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -136,26 +153,54 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let result = books;
-      if (args.author) {
-        result = result.filter((b) => b.author === args.author);
-      }
-      if (args.genre) {
-        result = result.filter((b) => b.genres.includes(args.genre));
-      }
-      return result;
+    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      // let result = books;
+      // if (args.author) {
+      //   result = result.filter((b) => b.author === args.author);
+      // }
+      // if (args.genre) {
+      //   result = result.filter((b) => b.genres.includes(args.genre));
+      // }
+      // return result;
+      return Book.find({});
     },
-    allAuthors: () => authors,
+    allAuthors: async () => Author.find({}),
   },
   Author: {
-    bookCount: (root) => books.filter((b) => b.author === root.name).length,
+    bookCount: async (root) => 111, //(root) => books.filter((b) => b.author === root.name).length,
+  },
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author);
+      return author;
+    },
   },
   Mutation: {
-    addBook: (root, args) => {
-      if (books.find((b) => b.title === args.title)) {
+    addBook: async (root, args) => {
+      // if (books.find((b) => b.title === args.title)) {
+      //   throw new GraphQLError('Title must be unique', {
+      //     extensions: {
+      //       code: 'BAD_USER_INPUT',
+      //       invalidArgs: args.title,
+      //     },
+      //   });
+      // }
+      // if (!authors.find((a) => a.name === args.author)) {
+      //   const newAuthor = {
+      //     name: args.author,
+      //     bookCount: 1,
+      //     id: uuid(),
+      //   };
+      //   authors = authors.concat(newAuthor);
+      // }
+      // const book = args;
+      // books = books.concat(book);
+      // return book;
+
+      const bookTitleExists = await Book.findOne({ title: args.title });
+      if (bookTitleExists) {
         throw new GraphQLError('Title must be unique', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -163,17 +208,24 @@ const resolvers = {
           },
         });
       }
-      if (!authors.find((a) => a.name === args.author)) {
-        const newAuthor = {
+
+      let author = await Author.findOne({ name: args.author });
+
+      if (!author) {
+        author = new Author({
           name: args.author,
-          bookCount: 1,
-          id: uuid(),
-        };
-        authors = authors.concat(newAuthor);
+        });
+        await author.save();
       }
-      const book = args;
-      books = books.concat(book);
-      return book;
+
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author: author.id,
+        genres: args.genres,
+      });
+
+      return book.save();
     },
     editAuthor: (root, args) => {
       const author = authors.find((a) => a.name === args.name);

@@ -4,3 +4,6 @@ creating a GraphQL server with Apollo Server
 
 = 1hr 45min
 
+# Exercises 8.13 ... onwards
+
+= 3hr
