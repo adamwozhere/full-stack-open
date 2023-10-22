@@ -6,5 +6,5 @@ creating a GraphQL server with Apollo Server
 
 # Exercises 8.13 ... onwards
 
-= 4hr 30min
+= 4hr 50min
 
