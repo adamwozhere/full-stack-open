@@ -1,25 +1,24 @@
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
-
-import { Routes, Route } from 'react-router-dom';
-import NavMenu from './NavMenu';
+import Login from './components/Login';
+import NavMenu from './components/NavMenu';
 
 const App = () => {
+  const [token, setToken] = useState(null);
+
   return (
     <div>
-      <NavMenu />
+      <NavMenu token={token} setToken={setToken} />
       <Routes>
-        <Route path="/" element={<Authors />} />
+        <Route path="/" element={<Authors token={token} />} />
         <Route path="/books" element={<Books />} />
-        <Route path="/add-book" element={<NewBook />} />
+        <Route path="/add-book" element={<NewBook token={token} />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
       </Routes>
-
-      {/* <Authors show={page === 'authors'} />
-
-      <Books show={page === 'books'} />
-
-      <NewBook show={page === 'add'} /> */}
     </div>
   );
 };
