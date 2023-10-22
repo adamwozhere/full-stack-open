@@ -4,7 +4,7 @@ creating a GraphQL server with Apollo Server
 
 = 1hr 45min
 
-# Exercises 8.13 - 8.16
+# Exercises 8.13 - 8.16 - Database and user administration
 
 = 5hr 30min
 

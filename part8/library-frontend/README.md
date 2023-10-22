@@ -2,7 +2,9 @@
 
 using Apollo Client and a frontend with React to communicate to the GraphQL backend server.
 
-## notes
-
 = 2hrs
+
+# Exercises 8.17 - 8.22 - Login and updating the cache
+
+= 15min
 
