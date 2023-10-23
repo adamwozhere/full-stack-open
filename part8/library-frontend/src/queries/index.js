@@ -8,9 +8,32 @@ export const LOGIN = gql`
   }
 `;
 
+export const ME = gql`
+  query {
+    me {
+      id
+      username
+      favoriteGenre
+    }
+  }
+`;
+
 export const ALL_BOOKS = gql`
   query {
     allBooks {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`;
+
+export const BOOKS_BY_GENRE = gql`
+  query bookByGenre($genre: String!) {
+    allBooks(genre: $genre) {
       title
       author {
         name

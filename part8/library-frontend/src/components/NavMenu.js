@@ -19,6 +19,7 @@ const NavMenu = ({ token, setToken }) => {
       ) : (
         <>
           <Link to="/add-book">Add book</Link>
+          <Link to="/recommended">Recommended</Link>
           <button onClick={handleLogout}>Logout</button>
         </>
       )}
