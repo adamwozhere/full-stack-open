@@ -1,13 +1,15 @@
 import { useApolloClient } from '@apollo/client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavMenu = ({ token, setToken }) => {
   const client = useApolloClient();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setToken(null);
     localStorage.clear();
     client.resetStore();
+    navigate('/');
   };
 
   return (
@@ -18,8 +20,8 @@ const NavMenu = ({ token, setToken }) => {
         <Link to="/login">Login</Link>
       ) : (
         <>
-          <Link to="/add-book">Add book</Link>
-          <Link to="/recommended">Recommended</Link>
+          <Link to="/add-book">Add book</Link>&nbsp;
+          <Link to="/recommended">Recommended</Link>&nbsp;
           <button onClick={handleLogout}>Logout</button>
         </>
       )}

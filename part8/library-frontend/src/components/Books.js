@@ -5,9 +5,11 @@ import { ALL_BOOKS } from '../queries';
 const Books = () => {
   const [genre, setGenre] = useState('All');
 
-  const result = useQuery(ALL_BOOKS);
+  const genreData = useQuery(ALL_BOOKS);
 
-  if (result.loading) {
+  const { data, loading, refetch } = useQuery(ALL_BOOKS);
+
+  if (loading || genreData.loading) {
     return (
       <div>
         <h2>Books</h2>
@@ -16,26 +18,30 @@ const Books = () => {
     );
   }
 
-  const books = result.data.allBooks;
+  const books = data.allBooks;
 
-  const genres = new Set();
-  books.forEach((book) => book.genres.forEach((genre) => genres.add(genre)));
-  const genreButtons = Array.from(genres);
-
-  const booksByGenre = books.filter(
-    (book) => genre === 'All' || book.genres.includes(genre)
+  const set = new Set();
+  genreData.data.allBooks.forEach((book) =>
+    book.genres.forEach((genre) => set.add(genre))
   );
+  const genres = Array.from(set);
+
+  const selectGenre = (genre) => {
+    setGenre(genre);
+    refetch({ genre: genre === 'All' ? '' : genre });
+  };
 
   return (
     <div>
       <h2>Books</h2>
       <div>
-        <button onClick={() => setGenre('All')}>All</button>
-        {genreButtons.map((g) => (
-          <button key={g} onClick={() => setGenre(g)}>
-            {g}
-          </button>
-        ))}
+        <button onClick={() => selectGenre('All')}>All</button>
+        {data &&
+          genres.map((g) => (
+            <button key={g} onClick={() => selectGenre(g)}>
+              {g}
+            </button>
+          ))}
         <h3>Genre: {genre}</h3>
       </div>
 
@@ -46,13 +52,14 @@ const Books = () => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksByGenre.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
+          {data &&
+            books.map((a) => (
+              <tr key={a.title}>
+                <td>{a.title}</td>
+                <td>{a.author.name}</td>
+                <td>{a.published}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

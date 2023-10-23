@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { BOOKS_BY_GENRE, ME } from '../queries';
+import { ALL_BOOKS, ME } from '../queries';
 
 const Recommended = () => {
   const { data: userData } = useQuery(ME);
   const genre = userData?.me?.favoriteGenre;
 
   console.log('user', JSON.stringify(genre));
-  const { data: booksData, loading } = useQuery(BOOKS_BY_GENRE, {
+  const { data: booksData, loading } = useQuery(ALL_BOOKS, {
     variables: { genre },
   });
 
