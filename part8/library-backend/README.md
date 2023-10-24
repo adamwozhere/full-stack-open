@@ -8,3 +8,9 @@ creating a GraphQL server with Apollo Server
 
 = 5hr 30min
 
+# Exercise 8.23 - Fragments and subscriptions
+
+Trying to get it working but context creation failing for JWT
+
+= 1hr 40min
+
