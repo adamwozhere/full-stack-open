@@ -8,3 +8,6 @@ using Apollo Client and a frontend with React to communicate to the GraphQL back
 
 = 4hrs
 
+# Exercises 8.34 - 8.26 - Fragments and subscriptions
+
+= 45min

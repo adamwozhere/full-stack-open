@@ -1,4 +1,4 @@
 # Total Hours - part8
 
-= 15hr 40min
+= 16hr 25min
 

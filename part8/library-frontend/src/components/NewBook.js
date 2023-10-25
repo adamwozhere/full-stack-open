@@ -35,7 +35,7 @@ const NewBook = () => {
     setGenres([]);
     setGenre('');
 
-    navigate('/');
+    navigate('/books');
   };
 
   const addGenre = () => {

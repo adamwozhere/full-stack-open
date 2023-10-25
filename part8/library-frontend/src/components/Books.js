@@ -1,9 +1,40 @@
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../queries';
+import { useQuery, useSubscription, useApolloClient } from '@apollo/client';
+import { ALL_BOOKS, BOOK_ADDED } from '../queries';
+
+// function that takes care of manipulating the cache
+// appears to work but seems like double refresh, and shows an error in console re: special merging function for cache
+export const updateCache = (cache, query, addedBook) => {
+  // helper to eliminate saving the sme book twice
+  const uniqByName = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      let k = item.name;
+      return seen.has(k) ? false : seen.add(k);
+    });
+  };
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    };
+  });
+};
 
 const Books = () => {
   const [genre, setGenre] = useState('All');
+
+  const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      console.log('bookAdded', addedBook);
+      // window.alert('bookAdded', addedBook);
+
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    },
+  });
 
   const genreData = useQuery(ALL_BOOKS);
 
