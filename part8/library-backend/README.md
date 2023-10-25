@@ -14,3 +14,7 @@ Trying to get it working but context creation failing for JWT
 
 = 1hr 40min
 
+# Exercise 8.26 - Fragments and subscriptions (solving the N+1 problem)
+
+= 3hrs 15min
+

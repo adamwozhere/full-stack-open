@@ -7,6 +7,8 @@ const Book = require('./models/book.model');
 const { PubSub } = require('graphql-subscriptions');
 const pubsub = new PubSub();
 
+const loaders = require('./loaders');
+
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
@@ -33,11 +35,14 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: async (root) => {
-      console.log(root);
-      const num = await Book.find({ author: root.id });
-      console.log(num);
-      return num.length;
+    bookCount: async (root, args, context) => {
+      const { loaders } = context;
+      const { bookCountLoader } = loaders;
+
+      // use bookCountLoader to batch mongoose requests to solve N+1 problem
+      const books = await bookCountLoader.load(root.id);
+
+      return books.length;
     },
   },
   Book: {

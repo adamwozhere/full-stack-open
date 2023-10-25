@@ -23,6 +23,8 @@ const jwt = require('jsonwebtoken');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 
+const loaders = require('./loaders');
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
 console.log('conneting to', MONGODB_URI);
@@ -31,6 +33,8 @@ mongoose
   .connect(MONGODB_URI)
   .then(() => console.log('connected to MongoDB'))
   .catch((error) => console.log('error connecting to MongoDB:', error.message));
+
+mongoose.set('debug', true);
 
 // setup now in a function
 const start = async () => {
@@ -76,8 +80,16 @@ const start = async () => {
             process.env.JWT_SECRET
           );
           const currentUser = await User.findById(decodedToken.id);
-          return { currentUser };
+          return {
+            currentUser,
+            loaders,
+          };
         }
+
+        // if no auth, just return loaders
+        return {
+          loaders,
+        };
       },
     })
   );
