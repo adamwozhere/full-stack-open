@@ -27,7 +27,7 @@ const parseArgs = (args: string[]): ExerciseInputs => {
 
   return {
     exerciseHours: processed,
-    targetHours: target,
+    targetHours: Number(target),
   };
 };
 

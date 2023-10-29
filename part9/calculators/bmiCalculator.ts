@@ -19,7 +19,7 @@ const parseArgs = (args: string[]): HeightAndWeight => {
 
 const calculateBmi = (heightCM: number, weightKG: number) => {
   const heightM = heightCM / 100;
-  let bmi = weightKG / (heightM * heightM);
+  const bmi = weightKG / (heightM * heightM);
   let result = '';
 
   if (bmi < 18.5) {
