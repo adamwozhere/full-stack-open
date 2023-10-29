@@ -33,6 +33,11 @@ const calculateBmi = (heightCM: number, weightKG: number) => {
   }
 
   console.log(`bmi: ${bmi.toFixed(2)} - ${result}`);
+  return {
+    weight: weightKG,
+    height: heightCM,
+    bmi: result,
+  };
 };
 
 try {
