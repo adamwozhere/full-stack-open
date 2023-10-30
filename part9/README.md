@@ -10,4 +10,5 @@ exercise 9.6 = 40min
 (Trying to setup eslint but latter part causes problems with .eslintrc not seeing .tsconfig.json)
 Note: managed to fix but not really sure how, possible reloading into folder then back out? or just changing to .eslintrc and not .eslintrc.cjs (module.exports = {})
 exercise 9.7 = 40min
+exercise 9.8 = 30min (managed to fix eslint error by changing "project": true - as this sets eslint to use the .tsconfig.json that is closest to the source files!)
 
