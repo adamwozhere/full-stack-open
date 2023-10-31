@@ -16,4 +16,5 @@ exercise 9.10 = 30min
 exercise 9.11 = 20min (still unsure about Omit<Patient, 'ssn'>; type and mapping over the object to remove ssn in the return statement object, as it seems like you can still add an ssn or another key and typescript doenst complain that it doesn't exist in the SensitivePatientDetails object ?)
 exercise 9.12 = 50min
 exercise 9.13 = 1hr 25min (Tried to use as const object instead of enum for Gender as TotalTypescript suggests enums are bad practice - however I could not validate the incoming string against the Gender object values, so used enum as in the course documentation)
+exercise 9.14 = 45min
 
