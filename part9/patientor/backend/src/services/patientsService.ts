@@ -1,7 +1,7 @@
 import data from '../data/patients';
-import { SensitivePatientDetails } from '../types';
+import { NonSensitivePatientDetails } from '../types';
 
-const getPatients = (): SensitivePatientDetails[] => {
+const getPatients = (): NonSensitivePatientDetails[] => {
   return data.map((d) => ({
     id: d.id,
     name: d.name,
