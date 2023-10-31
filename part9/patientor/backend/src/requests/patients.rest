@@ -12,3 +12,16 @@ Content-Type: application/json
   "gender": "male",
   "occupation": "Actor"
 }
+
+###
+
+POST http://localhost:3000/api/patients HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Gimli",
+  "dateOfBirth": "1010-01-01",
+  "ssn": "09877",
+  "gender": "dwarf",
+  "occupation": "Warrior"
+}

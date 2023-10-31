@@ -1,6 +1,11 @@
 import data from '../data/patients';
 import { v1 as uuid } from 'uuid';
-import { Patient, NewPatientEntry, NonSensitivePatientDetails } from '../types';
+import {
+  Patient,
+  NewPatientEntry,
+  NonSensitivePatientDetails,
+  Gender,
+} from '../types';
 
 const patients = data;
 
@@ -9,7 +14,7 @@ const getPatients = (): NonSensitivePatientDetails[] => {
     id: d.id,
     name: d.name,
     dateOfBirth: d.dateOfBirth,
-    gender: d.gender,
+    gender: d.gender as Gender,
     occupation: d.occupation,
   }));
 };
