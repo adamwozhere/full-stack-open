@@ -18,4 +18,5 @@ exercise 9.12 = 50min
 exercise 9.13 = 1hr 25min (Tried to use as const object instead of enum for Gender as TotalTypescript suggests enums are bad practice - however I could not validate the incoming string against the Gender object values, so used enum as in the course documentation)
 exercise 9.14 = 45min
 exercise 9.15 = 45min - (got confused with prop types, at first tried to destructure and put the type interface in directly e.g. parts: CourseParts[] but this doesnt work - need to do a Props interface with parts: CourseParts[] in it instead?)
+exercise 9.16 = 50min (got stuck at first with cors for flight-diary: initially thought I needed to set '/api' proxy in vite config but didn't work, instead I installed cors in the supplied backend although not sure if this is the correct approach. Copied the types file from the backend to the frontend: unsure if this is correct approach also)
 
