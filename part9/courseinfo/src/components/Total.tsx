@@ -13,7 +13,8 @@ const Total = ({ courseParts }: Props) => {
     0
   );
 
-  return <p>Number of exercises {totalExercises}</p>;
+  return <h3>Total number of exercises: {totalExercises}</h3>;
 };
 
 export default Total;
+
