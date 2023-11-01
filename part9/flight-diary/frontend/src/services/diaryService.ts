@@ -3,20 +3,38 @@ import { DiaryEntry, NewDiaryEntry, NonSensitiveDiaryEntry } from '../types';
 
 const baseUrl = 'http://localhost:3000/api/diaries';
 
-const getDiaries = () => {
-  return axios
-    .get<NonSensitiveDiaryEntry[]>(baseUrl)
-    .then((response) => response.data);
+const getDiaries = async () => {
+  try {
+    const response = await axios.get<NonSensitiveDiaryEntry[]>(baseUrl);
+    return response.data;
+  } catch (error) {
+    let message = 'Something went wrong.';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data;
+    }
+
+    throw new Error(message);
+  }
 };
 
-const addDiary = (diary: NewDiaryEntry) => {
-  return axios
-    .post<NewDiaryEntry>(baseUrl, {
+const addDiary = async (diary: NewDiaryEntry) => {
+  try {
+    const response = await axios.post<NewDiaryEntry>(baseUrl, {
       ...diary,
       weather: diary.weather.toString(),
       visibility: diary.visibility.toString(),
-    })
-    .then((response) => response.data as DiaryEntry);
+    });
+    return response.data as DiaryEntry;
+  } catch (error) {
+    let message = 'Something went wrong.';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data;
+    }
+
+    throw new Error(message);
+  }
 };
 
 export default {
