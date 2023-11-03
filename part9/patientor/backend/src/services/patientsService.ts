@@ -3,13 +3,13 @@ import { v1 as uuid } from 'uuid';
 import {
   Patient,
   NewPatientEntry,
-  NonSensitivePatientDetails,
+  NonSensitivePatient,
   Gender,
 } from '../types';
 
 const patients = data;
 
-const getPatients = (): NonSensitivePatientDetails[] => {
+const getPatients = (): NonSensitivePatient[] => {
   return patients.map((d) => ({
     id: d.id,
     name: d.name,
@@ -17,6 +17,18 @@ const getPatients = (): NonSensitivePatientDetails[] => {
     gender: d.gender as Gender,
     occupation: d.occupation,
   }));
+};
+
+const getPatient = (id: string): Patient | null => {
+  const p = patients.find((p) => p.id === id);
+  if (p) {
+    return {
+      ...p,
+      gender: p.gender as Gender,
+      entries: [],
+    };
+  }
+  return null;
 };
 
 const addPatient = (patient: NewPatientEntry): Patient => {
@@ -31,5 +43,6 @@ const addPatient = (patient: NewPatientEntry): Patient => {
 export default {
   getPatients,
   addPatient,
+  getPatient,
 };
 
