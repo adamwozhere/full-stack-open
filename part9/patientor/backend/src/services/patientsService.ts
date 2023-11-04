@@ -1,4 +1,5 @@
-import data from '../data/patients';
+// import data from '../data/patients';
+import patients from '../data/patients';
 import { v1 as uuid } from 'uuid';
 import {
   Patient,
@@ -7,7 +8,7 @@ import {
   Gender,
 } from '../types';
 
-const patients = data;
+// const patients = data;
 
 const getPatients = (): NonSensitivePatient[] => {
   return patients.map((d) => ({
@@ -16,6 +17,7 @@ const getPatients = (): NonSensitivePatient[] => {
     dateOfBirth: d.dateOfBirth,
     gender: d.gender as Gender,
     occupation: d.occupation,
+    entries: d.entries,
   }));
 };
 
@@ -25,7 +27,6 @@ const getPatient = (id: string): Patient | null => {
     return {
       ...p,
       gender: p.gender as Gender,
-      entries: [],
     };
   }
   return null;
