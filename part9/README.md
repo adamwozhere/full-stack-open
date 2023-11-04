@@ -24,5 +24,6 @@ exercise 9.18 = 2hr 10min - (added a notification component with Context but fou
 exercise 9.19 = 15min (changing new diary form to use a date field and radio buttons)
 exercise 9.20 = 1hr - some trouble with the types of the object, unsure if I should be using try / catch in the get route as with the post route
 exercise 9.21 = 50min (some problems trying to get the api working at first, but used useState and useEffect to fetch api and then render using params.id - doesn't differentiate between no data and loading though: ReactQuery probably better for this sort of thing)
-exercise 9.22 = 30min
+exercise 9.22 = 30min (don't know if items are actually checked by the backend correctly, or just via typescript checking; if that is enough?)
+exercise 9.23 = 15min
 

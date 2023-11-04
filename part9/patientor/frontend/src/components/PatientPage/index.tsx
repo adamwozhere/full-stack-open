@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Patient } from '../../types';
+import { Entry, Patient } from '../../types';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
 
@@ -26,6 +26,21 @@ const PatientPage = () => {
       </h3>
       <p>ssn: {data.ssn}</p>
       <p>occupation: {data.occupation}</p>
+      <h3>Entries</h3>
+      {data.entries?.map((entry: Entry) => {
+        return (
+          <div key={entry.id}>
+            <p>
+              {entry.date} {entry.description}
+            </p>
+            <ul>
+              {entry.diagnosisCodes?.map((code) => {
+                return <li key={code}>{code}</li>;
+              })}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
 };
