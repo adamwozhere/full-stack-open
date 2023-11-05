@@ -30,3 +30,110 @@ Content-Type: application/json
   "occupation": "Warrior"
 }
 
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "Hospital",
+  "description": "A test hospital entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Test",
+  "diagnosisCodes": ["T1"],
+  "discharge": {
+    "date": "2023-11-05",
+    "criteria": "Test passed"
+  }
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "OccupationalHealthcare",
+  "description": "A test occupational healthcare entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Test",
+  "diagnosisCodes": ["T1", "T2"],
+  "employerName": "Patientor",
+  "sickLeave": {
+    "startDate": "2023-11-05",
+    "endDate": "2023-11-08"
+  }
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "HealthCheck",
+  "description": "A test health check entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Test",
+  "diagnosisCodes": ["T1", "T2", "T3"],
+  "healthCheckRating": 1
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "Hospital",
+  "description": "A test Invalid hospital entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Fail",
+  "diagnosisCodes": ["T1.f"]
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "OccupationalHealthcare",
+  "description": "A test Invalid occupational healthcare entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Fail",
+  "diagnosisCodes": ["T1.f", "T2.f"],
+  "sickLeave": {
+    "startDate": "2023-11-05",
+    "endDate": "2023-11-08"
+  }
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "HealthCheck",
+  "description": "A test Invalid health check entry",
+  "date": "2023-11-05",
+  "specialist": "Dr Test",
+  "diagnosisCodes": ["T1", "T2", "T3"]
+}
+
+###
+
+POST http://localhost:3000/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "Hospital",
+  "description": "A test hospital entry without diagnosisCodes",
+  "date": "2023-11-05",
+  "specialist": "Dr Test",
+  "discharge": {
+    "date": "2023-11-05",
+    "criteria": "Test passed"
+  }
+}

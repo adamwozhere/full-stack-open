@@ -6,6 +6,8 @@ import {
   NewPatientEntry,
   NonSensitivePatient,
   Gender,
+  EntryWithoutId,
+  Entry,
 } from '../types';
 
 // const patients = data;
@@ -41,9 +43,19 @@ const addPatient = (patient: NewPatientEntry): Patient => {
   return newPatient;
 };
 
+const addEntry = (id: string, entry: EntryWithoutId): Entry => {
+  const newEntry = {
+    id: uuid(),
+    ...entry,
+  };
+  patients.find((p) => p.id === id)?.entries.push(newEntry);
+  return newEntry;
+};
+
 export default {
   getPatients,
   addPatient,
   getPatient,
+  addEntry,
 };
 
