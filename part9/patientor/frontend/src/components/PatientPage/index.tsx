@@ -1,44 +1,40 @@
 import { useEffect, useState } from 'react';
-import { Entry, Patient } from '../../types';
+import { Diagnosis, Entry, Patient } from '../../types';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
+import EntryDetails from './EntryDetails';
 
-const PatientPage = () => {
-  const [data, setData] = useState<Patient | null>(null);
+interface Props {
+  diagnoses: Diagnosis[];
+}
+
+const PatientPage = ({ diagnoses }: Props) => {
+  const [patient, setPatient] = useState<Patient | null>(null);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchPatient = () => {
       if (!id) return;
-      patientService.getPatient(id).then((data) => {
-        setData(data);
+      patientService.getPatient(id).then((patient) => {
+        setPatient(patient);
       });
     };
     fetchPatient();
   }, [id]);
 
-  if (!data) return <p>Loading...</p>;
+  if (!patient) return <p>Loading...</p>;
 
   return (
     <div>
       <h3>
-        {data.name} ({data.gender})
+        {patient.name} ({patient.gender})
       </h3>
-      <p>ssn: {data.ssn}</p>
-      <p>occupation: {data.occupation}</p>
+      <p>ssn: {patient.ssn}</p>
+      <p>occupation: {patient.occupation}</p>
       <h3>Entries</h3>
-      {data.entries?.map((entry: Entry) => {
+      {patient.entries?.map((entry: Entry) => {
         return (
-          <div key={entry.id}>
-            <p>
-              {entry.date} {entry.description}
-            </p>
-            <ul>
-              {entry.diagnosisCodes?.map((code) => {
-                return <li key={code}>{code}</li>;
-              })}
-            </ul>
-          </div>
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         );
       })}
     </div>
