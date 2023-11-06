@@ -29,4 +29,5 @@ exercise 9.23 = 15min
 exercise 9.24 = 15min
 exercise 9.25 = 1hr 15min
 exercise 9.26 = 1hr 30min (quite tricky, unsure if checking correctly and providng good error messages; although server cannot know what type of Entry is intended based on missing information so I think it is good enough)
+exercise 9.27 = 2hr 30min (error message / state doesn't clear, or form reset when success)
 

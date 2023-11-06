@@ -16,7 +16,7 @@ const isNumber = (num: unknown): num is number => {
 };
 
 const parseName = (name: unknown): string => {
-  if (!isString(name)) {
+  if (!isString(name) || name.trim() === '') {
     throw new Error('Incorrect or missing name');
   }
 
@@ -24,7 +24,7 @@ const parseName = (name: unknown): string => {
 };
 
 const parseSSN = (ssn: unknown): string => {
-  if (!isString(ssn)) {
+  if (!isString(ssn) || ssn.trim() === '') {
     throw new Error('Incorrect or missing SSN');
   }
 
@@ -46,7 +46,7 @@ const parseGender = (gender: unknown): Gender => {
 };
 
 const parseOccupation = (occupation: unknown): string => {
-  if (!isString(occupation)) {
+  if (!isString(occupation) || occupation.trim() === '') {
     throw new Error('Incorrect or missing occupation');
   }
 
@@ -92,7 +92,7 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
 };
 
 const parseDescription = (description: unknown): string => {
-  if (!isString(description)) {
+  if (!isString(description) || description.trim() === '') {
     throw new Error('Incorrect or missing description');
   }
 
@@ -100,7 +100,7 @@ const parseDescription = (description: unknown): string => {
 };
 
 const parseSpecialist = (specialist: unknown): string => {
-  if (!isString(specialist)) {
+  if (!isString(specialist) || specialist.trim() === '') {
     throw new Error('Incorrect or missing specialist');
   }
 
@@ -108,7 +108,7 @@ const parseSpecialist = (specialist: unknown): string => {
 };
 
 const parseCriteria = (criteria: unknown): string => {
-  if (!isString(criteria)) {
+  if (!isString(criteria) || criteria.trim() === '') {
     throw new Error('Incorrect or missing criteria');
   }
 
@@ -116,7 +116,7 @@ const parseCriteria = (criteria: unknown): string => {
 };
 
 const parseEmployerName = (employerName: unknown): string => {
-  if (!isString(employerName)) {
+  if (!isString(employerName) || employerName.trim() === '') {
     throw new Error('Incorrect or missing employerName');
   }
 
@@ -161,6 +161,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
       description: parseDescription(object.description),
       date: parseDate(object.date),
       specialist: parseSpecialist(object.specialist),
+      type: object.type,
     };
 
     if ('diagnosisCodes' in object) {
