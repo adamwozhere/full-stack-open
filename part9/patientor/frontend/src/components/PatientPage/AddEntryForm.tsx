@@ -1,4 +1,13 @@
-import { Alert, Button, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 import { EntryWithoutId, HealthCheckRating } from '../../types';
 
@@ -9,23 +18,59 @@ interface Props {
 }
 
 const AddEntryForm = ({ patientId, onSubmit, error }: Props) => {
+  const [entryType, setEntryType] = useState('HealthCheck');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [rating, setRating] = useState(HealthCheckRating.Healthy);
   const [diagnosisCodes, setDiagnosisCodes] = useState('');
 
+  const [employerName, setEmployerName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [dischargeDate, setDischargeDate] = useState('');
+  const [dischargeCriteria, setDischargeCriteria] = useState('');
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    onSubmit(patientId, {
-      type: 'HealthCheck',
-      description,
-      date,
-      specialist,
-      healthCheckRating: rating,
-      diagnosisCodes: diagnosisCodes.split(', '),
-    });
+    if (entryType === 'HealthCheck') {
+      onSubmit(patientId, {
+        type: 'HealthCheck',
+        description,
+        date,
+        specialist,
+        diagnosisCodes: diagnosisCodes.split(', '),
+        healthCheckRating: rating,
+      });
+    } else if (entryType === 'Hospital') {
+      onSubmit(patientId, {
+        type: 'Hospital',
+        description,
+        date,
+        specialist,
+        diagnosisCodes: diagnosisCodes.split(', '),
+        discharge: {
+          date: dischargeDate,
+          criteria: dischargeCriteria,
+        },
+      });
+    } else if (entryType === 'OccupationalHealthcare') {
+      onSubmit(patientId, {
+        type: 'OccupationalHealthcare',
+        description,
+        date,
+        specialist,
+        diagnosisCodes: diagnosisCodes.split(', '),
+        employerName,
+        sickLeave: {
+          startDate,
+          endDate,
+        },
+      });
+    } else {
+      console.error('unhandled entry type');
+    }
 
     // reset fields ? doesn't handle this if it's a success or not so don't reset for now
     // also doesn't clear error alert message
@@ -60,7 +105,33 @@ const AddEntryForm = ({ patientId, onSubmit, error }: Props) => {
         marginBlock: '1rem',
       }}
     >
-      <h3>New HealthCheck entry</h3>
+      <h3>New {entryType} entry</h3>
+
+      <FormControl>
+        <FormLabel>Entry type</FormLabel>
+        <RadioGroup
+          row
+          name="entry-type"
+          value={entryType}
+          onChange={({ target }) => setEntryType(target.value)}
+        >
+          <FormControlLabel
+            value="HealthCheck"
+            control={<Radio />}
+            label="Health Check"
+          />
+          <FormControlLabel
+            value="Hospital"
+            control={<Radio />}
+            label="Hospital"
+          />
+          <FormControlLabel
+            value="OccupationalHealthcare"
+            control={<Radio />}
+            label="Occupational Healthcare"
+          />
+        </RadioGroup>
+      </FormControl>
 
       {error ? <Alert severity="error">{error}</Alert> : null}
 
@@ -83,12 +154,55 @@ const AddEntryForm = ({ patientId, onSubmit, error }: Props) => {
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <TextField
-        label="HealthCheck Rating"
-        fullWidth
-        value={rating}
-        onChange={(event) => onRatingChange(event)}
-      />
+
+      {entryType === 'HealthCheck' ? (
+        <TextField
+          label="HealthCheck Rating"
+          fullWidth
+          value={rating}
+          onChange={(event) => onRatingChange(event)}
+        />
+      ) : null}
+
+      {entryType === 'Hospital' ? (
+        <div>
+          <TextField
+            label="Discharge Date"
+            fullWidth
+            value={dischargeDate}
+            onChange={({ target }) => setDischargeDate(target.value)}
+          />
+          <TextField
+            label="Discharge Criteria"
+            fullWidth
+            value={dischargeCriteria}
+            onChange={({ target }) => setDischargeCriteria(target.value)}
+          />
+        </div>
+      ) : null}
+
+      {entryType === 'OccupationalHealthcare' ? (
+        <div>
+          <TextField
+            label="Employer Name"
+            fullWidth
+            value={employerName}
+            onChange={({ target }) => setEmployerName(target.value)}
+          />
+          <h4>Sick Leave</h4>
+          <TextField
+            label="Start Date"
+            value={startDate}
+            onChange={({ target }) => setStartDate(target.value)}
+          />
+          <TextField
+            label="End Date"
+            value={endDate}
+            onChange={({ target }) => setEndDate(target.value)}
+          />
+        </div>
+      ) : null}
+
       <TextField
         label="Diagnosis Codes (comma separated)"
         fullWidth
