@@ -59,3 +59,17 @@ exercise 9.29 = 1hr
 
 = Total 23hr 40min
 
+## NOTES from seeing solution
+
+- Could have mapped the NonSensitivePatient object using spread operator and set ssn to undefined instead of writing an object literal of each wanted property minus the ssn
+
+- Could have parsed healthCheckRating by setting return value as discriminated union e.g. `: 0 | 1 | 2 | 3 =>`
+
+- Could have parsed Discharge and SickLeave objects in one function each then return the parsed object
+- To parse sickLeave etc. check: `if (!('startDate' in sickLeave) || !isString(sickLeave.startDate) || !isDate(sickLeave.startDate)) { throw error }`
+
+- When checking and parsing the different Entry types; create a `const common = { ... }` common object from the BaseEntry properties then return an object with common spread into it: `return { ...common, type: 'OccupationalHealthcare', employerName: name }` etc.
+
+- Could have also used the same 'common' object technique when creating the object to send to the API from the NewEntryForm
+
+- Would have been better to fetch the API for the diagnoses in App root, then use those to create the Menu Select buttons instead of including the file from the backend and mapping over the diagnosis.codes (I completely forgot about the diagnoses API)
