@@ -1,6 +1,6 @@
 # Part 9
 
-## exercises 9.1 -
+## exercises 9.1 - 9.29
 
 exercise 9.1 = 1hr 30min
 exercise 9.2 = 30min
@@ -31,6 +31,7 @@ exercise 9.25 = 1hr 15min
 exercise 9.26 = 1hr 30min (quite tricky, unsure if checking correctly and providng good error messages; although server cannot know what type of Entry is intended based on missing information so I think it is good enough)
 exercise 9.27 = 2hr 30min (error message / state doesn't clear, or form reset when success)
 exercise 9.28 = 45min - setup form UI to switch between entry types
+exercise 9.29 = 1hr
 
-= 22hr 25min
+= 23hr 40min
 
