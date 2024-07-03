@@ -1,0 +1,41 @@
+services:
+  app:
+    image: phonebook-frontend-dev
+    build:
+      context: ./phonebook-frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./phonebook-frontend:/usr/src/app
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8080/api
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: personsdb
+    volumes:
+      - ./phonebook-backend/mongo_data:/data/db
+      - ./phonebook-backend/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+
+  server:
+    image: phonebook-server-dev
+    build:
+      context: ./phonebook-backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./phonebook-backend:/usr/src/app
+    environment:
+      MONGO_URL: mongodb://mongoadmin:secret@mongo:27017/personsdb
+    depends_on:
+      - mongo
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    depends_on:
+      - app

@@ -1,0 +1,28 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "backend for full-stack-open 2023 part3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build:frontend": "rm -rf dist && cd ../../part2/phonebook && npm run build && cp -r dist ../../part3/phonebook-backend",
+    "deploy:full": "npm run build:frontend && git add . && git commit -m frontend-build && git push",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Wozniak",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.5.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.49.0",
+    "nodemon": "^3.0.1"
+  }
+}
+

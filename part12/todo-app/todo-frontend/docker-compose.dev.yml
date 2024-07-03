@@ -1,0 +1,28 @@
+services:
+  app:
+    image: todo-frontend-dev
+    build:
+      context: . # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will seimply tell which dockerfile to be read
+    volumes:
+      - ./:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    ports:
+      - 3210:5173
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8080
+    container_name: todo-frontend-dev # This will name the container todo-frontend-dev
+
+  debug-helper: # Use command: docker compose -f docker-compose.dev.yml run debug-helper wget -O - http://app:5173
+    image: busybox 
+    depends_on:
+      - app
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - app # wait for the frontend container to be started
