@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128Mb
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - type: tmpfs
+    #     target: /dev/shm
+    #     tmpfs:
+    #     size: 134217728 # 128Mb
+    environment:
+      POSTGRES_PASSWORD: secret
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+
+  server:
+    image: bloglist-server
+    build:
+      context: .
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - DATABASE_URL=postgres://postgres:secret@db:5432/postgres
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
